@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option go_package = "github.com/HongQuan1812/VNExpressProject/VNExpress_selector";
+
+package vnexpress_selector;
+
+service VNExpress_selector {
+
+    rpc Select_news(Range) returns (stream News) {}
+
+    rpc Select_podcast(Range) returns (stream Podcast) {}
+
+}
+
+message Range {
+    repeated string main_categories = 1;
+    repeated string sub_categories = 2;
+    repeated string author = 3;
+    repeated string day = 4;
+    repeated string time = 5;
+    bool whole_day = 6;
+    repeated string day_comparisor = 7;
+    string time_comparisor = 8;
+    string limit = 9;
+}
+
+message News {
+    string url = 1;
+    string main_category = 2;
+    string sub_category = 3;
+    string title = 4;
+    string day = 5;
+    string time = 6;
+    string time_zone = 7;
+    string description = 8;
+    string news_content = 9;
+    repeated string relating_image = 10;
+    string author = 11;
+}
+
+
+message Podcast {
+    string url = 1;
+    string main_category = 2;
+    string sub_category = 3;
+    string title = 4;
+    string day = 5;
+    string time = 6;
+    string time_zone = 7;
+    string description = 8;
+    string relating_podcast = 9;
+    string author = 10;
+}
