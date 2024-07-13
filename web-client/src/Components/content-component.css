@@ -1,0 +1,34 @@
+/* ContentComponent.css */
+.ContentComponent {
+    margin: 20px;
+    display: flexbox;
+    border: 2px solid black; 
+    width: 230px;
+    padding: 20px;
+}
+
+.ContentComponent h4 {
+    color: blue;
+    margin-left: 10px;
+}
+
+.ContentComponent input {
+    display: block;
+    margin-left: 20px;
+    width: 200px;
+}
+
+.WhatButton {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.WhatButton button {
+    width: 90px; /* Set the width of the button */
+    height: 40px; /* Set the height of the button */
+    font-size: 16px; /* Adjust font size */
+    text-align: center;
+    cursor: pointer;
+}
+
