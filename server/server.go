@@ -370,7 +370,7 @@ func main() {
 				resp.WriteHeader(http.StatusNotFound)
 			}
 		}),
-		Addr: ":8080", // This is the port for HTTP server that will handle gRPC-Web requests
+		Addr: "localhost:8080", // This is the port for HTTP server that will handle gRPC-Web requests
 	}
 
 	log.Println("Starting gRPC and gRPC-Web server on port :8080")
