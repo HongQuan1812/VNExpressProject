@@ -373,7 +373,7 @@ func main() {
 		Addr: "localhost:8080", // This is the port for HTTP server that will handle gRPC-Web requests
 	}
 
-	log.Println("Starting gRPC and gRPC-Web server on port :8080")
+	log.Println("Starting gRPC and gRPC-Web server on port localhost:8080")
 	if err := httpServer.ListenAndServe(); err != nil {
 		log.Fatalf("failed to serve: %s", err)
 	}
