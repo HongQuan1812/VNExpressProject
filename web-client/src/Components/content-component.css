@@ -1,8 +1,7 @@
 /* ContentComponent.css */
 .ContentComponent {
-    margin: 20px;
-    display: flexbox;
-    border: 2px solid black; 
+    display: flex;
+    flex-direction: column;
     width: 230px;
     padding: 20px;
 }

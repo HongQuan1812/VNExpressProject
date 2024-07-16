@@ -1,0 +1,32 @@
+.WhenComponent {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    padding: 20px;
+}
+
+.DateComponent, .TimeComponent {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    padding: 10px;
+}
+
+.board {
+    display: flex;
+    align-items: center;
+}
+
+.yesAnswer, li.noAnswer, .Answer {
+    display: flex;
+    align-items: center;   
+}
+
+.Date, .Day-Month-Year , .Time{
+    display: flex;
+    flex-direction: column;
+}
+
+ 

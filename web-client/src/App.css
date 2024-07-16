@@ -1,4 +1,29 @@
-.App {
+.TableControl {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    border: 2px solid black; 
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    padding: 10px;
+    
 }
+
+.TableContent {
+    display: flex;
+    justify-content: center;   
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ConfirmButton {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 20px;
+}
+
