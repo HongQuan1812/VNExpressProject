@@ -18,7 +18,7 @@ function YesNoButton () {
         setmyWhen(prev => {
             let updatedWholeDay = prev["WholeDay"]
             updatedWholeDay = (e.target.value === 'true')
-            return {...prev, ["WholeDay"]: updatedWholeDay , ["ReleaseDay"]: []}
+            return {...prev, ["WholeDay"]: updatedWholeDay }
         });
     }
 
@@ -45,7 +45,6 @@ function Comparisor (props) {
             const updatedDayComparisor = [...prev["DayComparisor"]]
             updatedDayComparisor[index] = event.target.value
 
-            
             if (event.target.value === "any") {
                 return {...prev, ["DayComparisor"]:updatedDayComparisor , ["ReleaseDay"]: []}
             }
@@ -58,8 +57,13 @@ function Comparisor (props) {
             }
             return {...prev, ["DayComparisor"]:updatedDayComparisor }
         })
-
     };
+
+    useEffect(() => {
+        setmyWhen(prev => {
+            return {... prev, ["DayComparisor"]:  ["any", "any", "any"]}
+        })
+    }, [myWhen["WholeDay"]])
 
     return (
         <select value = {myWhen["DayComparisor"][Number(props.index)]} onChange={(e) => {handleChange(Number(props.index), e)}} >
@@ -141,6 +145,19 @@ function DateComponent () {
         }
     }, [temp_date]); // Run this effect whenever temp_date changes
 
+    useEffect(() => {
+        setmyWhen(prev => {
+            return {... prev, ["ReleaseDay"]: []}
+        })
+        settemp_date (prev => {
+            const updatedTemp_Date = {...prev}
+            updatedTemp_Date["Day"] = ["any", "any"]
+            updatedTemp_Date["Month"] = ["any", "any"]
+            updatedTemp_Date["Year"] = ["any", "any"]
+            return updatedTemp_Date
+        })
+    }, [myWhen["WholeDay"]])
+
 
     return (
         <div className="DateComponent">    
@@ -158,9 +175,9 @@ function DateComponent () {
                             
                             <input
                                 type="text"
-                                value = {myWhen["DayComparisor"][0] === "any" ? "" : myWhen["ReleaseDay"][0]}
+                                value = {myWhen["DayComparisor"][0] === "any" || !myWhen["ReleaseDay"][0] ? "" : myWhen["ReleaseDay"][0]}
                                 onChange={(e) => {handleDate(0,e)}}
-                                placeholder="dd-mm-yyyy"
+                                placeholder="yyyy-mm-dd"
                                 maxLength={10}
                                 disabled={myWhen["DayComparisor"][0] === "any" ? true : false}
                             />
@@ -171,7 +188,7 @@ function DateComponent () {
                                             type="text"
                                             value = {myWhen["ReleaseDay"][1]}
                                             onChange={(e) => {handleDate(1,e)}}
-                                            placeholder="dd-mm-yyyy"
+                                            placeholder="yyyy-mm-dd"
                                             maxLength={10}
                                         />
                                     </>

@@ -55,20 +55,28 @@ function ContentComponent () {
                 }
             }
             return {...prev, [content_name]: updatedContent}
-          });
-        
-        
+          }); 
     };
+
+    useEffect(() => {
+        setmyContent(prev => {
+            return { ...prev, ["MainCats"]:[] }
+        })
+        setinputValue(prev => {
+            return { ...prev, ["MainCats"]:[] }
+        })
+    }, [myContent["myWhat"]])
+
     return (
         <div className="ContentComponent">
             <WhatButton/> <br/>
             <h4> Main Categories </h4> 
             <input 
                 type = "text"
-                value = {inputValue["MainCats"]}
+                value = {myContent["myWhat"] === "podcast" ? "kinh tế" : inputValue["MainCats"]}
                 onChange={(e) => HandleChange(e, "MainCats")}
                 onBlur = {() => HandleBlur("MainCats")}
-                
+                disabled = {myContent["myWhat"] === "podcast" ? true : false}
             />
             
             <h4> Sub Categories </h4>

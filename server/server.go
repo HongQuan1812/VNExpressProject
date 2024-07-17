@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net/http"
+	"strconv"
+
+	// "net/http"
+	"net"
 	"strings"
 
 	pb "github.com/HongQuan1812/VNExpressProject/VNExpress_selector"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"google.golang.org/grpc"
 )
 
@@ -33,16 +35,17 @@ func (*vNExpressSelectorServer) ConnectDatabase() (*sql.DB, error) {
 	return db, nil
 }
 
-func Specify_Relative_Duration(comparisor string, time1 string, time2 string) string {
+func Specify_Relative_Duration(comparisor string, time1 interface{}, time2 interface{}) string {
 	var relative_duration string
+
+	time1_ := fmt.Sprintf("%#v", time1)
+	time2_ := fmt.Sprintf("%#v", time2)
+	fmt.Println((time1_))
+
 	if comparisor == "BETWEEN" {
-
-		relative_duration = fmt.Sprintf("BETWEEN %q AND %q", time1, time2)
-
+		relative_duration = fmt.Sprintf("BETWEEN %v AND %v", time1_, time2_)
 	} else {
-
-		relative_duration = fmt.Sprintf("%s %q", comparisor, time1)
-
+		relative_duration = fmt.Sprintf("%s %v", comparisor, time1_)
 	}
 	return relative_duration
 }
@@ -119,7 +122,9 @@ func (s *vNExpressSelectorServer) SelectNews(range_news *pb.Range, stream pb.VNE
 
 			for i := range components1 {
 				if components1[i] != "any" {
-					relative_duration := Specify_Relative_Duration(range_news.DayComparisor[i], components1[i], components2[i])
+					value1, _ := strconv.Atoi(components1[i])
+					value2, _ := strconv.Atoi(components2[i])
+					relative_duration := Specify_Relative_Duration(range_news.DayComparisor[i], value1, value2)
 					temp := fmt.Sprintf("%s(day)", component[i])
 					condition := strings.Join([]string{temp, relative_duration}, " ")
 					conditions = append(conditions, condition)
@@ -137,11 +142,11 @@ func (s *vNExpressSelectorServer) SelectNews(range_news *pb.Range, stream pb.VNE
 
 	if len(conditions) > 0 {
 		contentQuery = fmt.Sprintf("%s AND %s", contentQuery, strings.Join(conditions, " AND "))
+	}
 
-		if range_news.Limit != "" {
-			limit := fmt.Sprintf("LIMIT %s", range_news.Limit)
-			contentQuery = strings.Join([]string{contentQuery, limit}, " ")
-		}
+	if range_news.Limit != "" {
+		limit := fmt.Sprintf("LIMIT %s", range_news.Limit)
+		contentQuery = strings.Join([]string{contentQuery, limit}, " ")
 	}
 
 	fmt.Print("--------------------\n")
@@ -300,11 +305,11 @@ func (s *vNExpressSelectorServer) SelectPodcast(range_podcast *pb.Range, stream 
 
 	if len(conditions) > 0 {
 		contentQuery = fmt.Sprintf("%s AND %s", contentQuery, strings.Join(conditions, " AND "))
+	}
 
-		if range_podcast.Limit != "" {
-			limit := fmt.Sprintf("LIMIT %s", range_podcast.Limit)
-			contentQuery = strings.Join([]string{contentQuery, limit}, " ")
-		}
+	if range_podcast.Limit != "" {
+		limit := fmt.Sprintf("LIMIT %s", range_podcast.Limit)
+		contentQuery = strings.Join([]string{contentQuery, limit}, " ")
 	}
 
 	fmt.Print("--------------------\n")
@@ -355,26 +360,15 @@ func (s *vNExpressSelectorServer) SelectPodcast(range_podcast *pb.Range, stream 
 
 func main() {
 
-	grpcServer := grpc.NewServer()
-	service := &vNExpressSelectorServer{}
-	pb.RegisterVNExpressSelectorServer(grpcServer, service)
-
-	// Wrap the gRPC server with grpcweb
-	wrappedGrpc := grpcweb.WrapServer(grpcServer)
-
-	httpServer := &http.Server{
-		Handler: http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-			if wrappedGrpc.IsGrpcWebRequest(req) {
-				wrappedGrpc.ServeHTTP(resp, req)
-			} else {
-				resp.WriteHeader(http.StatusNotFound)
-			}
-		}),
-		Addr: "localhost:8080", // This is the port for HTTP server that will handle gRPC-Web requests
+	lis, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalf("cannot create listener: %s", err)
 	}
-
-	log.Println("Starting gRPC and gRPC-Web server on port localhost:8080")
-	if err := httpServer.ListenAndServe(); err != nil {
-		log.Fatalf("failed to serve: %s", err)
+	serverRegistrar := grpc.NewServer()
+	service := &vNExpressSelectorServer{}
+	pb.RegisterVNExpressSelectorServer(serverRegistrar, service)
+	err = serverRegistrar.Serve(lis)
+	if err != nil {
+		log.Fatalf("impossible to serve: %s", err)
 	}
 }

@@ -1,12 +1,14 @@
 import { useState, createContext, useEffect} from "react";
 import ContentComponent from './Components/content-component.js';
 import WhenComponent from './Components/when-component.js';
+import OutputComponent from './Components/output-component.js'
 import {selectData} from './grpcClient.js';
 
 import './App.css'
 
 export const contentContext = createContext();
 export const whenContext = createContext();
+export const outputContext = createContext();
 
 function App() {
   const [myContent, setmyContent] = useState({
@@ -23,6 +25,8 @@ function App() {
       "TimeComparisor" : "any",
       "ReleaseTime" : [],
   })
+
+  const [myOutput, setmyOutput] = useState({})
 
   const [isButtonPressed, setIsButtonPressed] = useState(false);
   const [DownOnWhat, setDownOnWhat] = useState();
@@ -49,22 +53,21 @@ function App() {
  
   
   const HandleClick = (event) => {
-      selectData({
-        type: myContent["myWhat"], 
-        mainCategories: myContent["MainCats"], 
-        subCategories: myContent["SubCats"], 
-        author: myContent["Authors"], 
-        wholeDay: myWhen["WholeDay"], 
-        dayComparisor: myWhen["DayComparisor"], 
-        releaseDay: myWhen["ReleaseDay"], 
-        timeComparisor: myWhen["TimeComparisor"], 
-        releaseTime: myWhen["ReleaseTime"], 
-        limit: myContent["Limit"],
-      }).then(result => {
+      selectData(
+        myContent["myWhat"], // Directly pass the string value
+        myContent["MainCats"], 
+        myContent["SubCats"], 
+        myContent["Authors"], 
+        myWhen["WholeDay"], 
+        myWhen["DayComparisor"], 
+        myWhen["ReleaseDay"], 
+        myWhen["TimeComparisor"], 
+        myWhen["ReleaseTime"], 
+        myContent["Limit"]
+      ).then(result => {
         console.log("Fetched data:", result);
-        // Update state or perform other actions with the result
-        // Example:
-        // setMyState(result);
+        setmyOutput(result)
+
       }).catch(error => {
         console.error("Error fetching data:", error);
         // Handle error, show error message, etc.
@@ -75,7 +78,6 @@ function App() {
   return (
       <div className="App">
           <div className="TableControl">
-          
             <div className="TableContent">
                 <contentContext.Provider value={{myContent, setmyContent}}>
                     <ContentComponent/>
@@ -89,7 +91,14 @@ function App() {
                 className="ConfirmButton" 
                 onMouseDown={handleMouseDown}
                 onClick={HandleClick}
-            > Confirm </button>
+            > Confirm 
+            </button>
+          </div>
+
+          <div className="Output">
+                <outputContext.Provider value={{myOutput}}>
+                    <OutputComponent/>
+                </outputContext.Provider>
           </div>
 
       </div>
