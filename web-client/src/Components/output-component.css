@@ -1,0 +1,9 @@
+.Output {
+    width : 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.Output pre {
+    white-space: pre-wrap; /* Wrap the text inside the <pre> tag */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+}

@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  gRPC-server:
+    image: myserver
+    ports: 
+      - "8080:8080"
+    networks:
+      - my_network
+  
+  db: 
+    image: mysql:8.2.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=1
+    volumes:
+      - my_database:/var/lib/mysql
+      - ./init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    entrypoint: ["/docker-entrypoint-initdb.d/init_db.sh"]
+    networks:
+      - my_network
+    
+  envoy-proxy:
+    image: envoyproxy/envoy:v1.24.0
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+    ports:
+      - "8089:8089"
+      - "9901:9901"
+    networks:
+      - my_network
+
+networks:
+  my_network:  
+    driver: bridge
+
+volumes:
+  my_database:

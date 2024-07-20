@@ -20,7 +20,7 @@ type vNExpressSelectorServer struct {
 }
 
 func (*vNExpressSelectorServer) ConnectDatabase() (*sql.DB, error) {
-	dsn := "HongQuan:18122003@tcp(localhost:3306)/VnExpressDatabase"
+	dsn := "root:1@tcp(db)/VnExpressDatabase"
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err

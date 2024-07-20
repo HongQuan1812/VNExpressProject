@@ -77,6 +77,8 @@ function App() {
   
   return (
       <div className="App">
+          <pre> {JSON.stringify(myContent, null, 2)} </pre>
+          <pre> {JSON.stringify(myWhen, null, 2)} </pre>
           <div className="TableControl">
             <div className="TableContent">
                 <contentContext.Provider value={{myContent, setmyContent}}>

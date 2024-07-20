@@ -158,6 +158,19 @@ function DateComponent () {
         })
     }, [myWhen["WholeDay"]])
 
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter') {
+                event.target.blur();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
         <div className="DateComponent">    
