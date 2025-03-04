@@ -2,12 +2,20 @@ version: '3.8'
 
 services:
   gRPC-server:
+    # container_name: gRPC-server
     image: myserver
-    ports: 
-      - "8080:8080"
+    # ports: 
+    #   - "8080:8080"
     networks:
       - my_network
-  
+
+  front-end:
+    image: my-frontend
+    ports:
+      - "3000:80" # Map port 3000 on host to port 80 inside the container
+    networks:
+      - my_network
+
   db: 
     image: mysql:8.2.0
     environment:
@@ -21,6 +29,7 @@ services:
       - my_network
     
   envoy-proxy:
+    # container_name: envoy-proxy 
     image: envoyproxy/envoy:v1.24.0
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
